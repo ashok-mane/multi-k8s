@@ -20,8 +20,8 @@ Follow below steps in powershell -
 docker run -it -v ${pwd}:/app ruby:2.4 sh
 gem install travis
 
-travis login --github-token your guithub token
-travis encrypt-file service-account.json -r ashok-mane/multi-k8s 
+travis login --github-token your guithub token --com
+travis encrypt-file service-account.json -r ashok-mane/multi-k8s --pro
 -> This will encrypt the file as service-account.json.enc and tie it to the ashok-mane/multi-k8s repository. Note this .enc file will be checked in to the repository and not original file (service-account.json )
 
 ============ NGINX as Router =========
@@ -37,8 +37,10 @@ $ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/s
 $ chmod 700 get_helm.sh
 $ ./get_helm.sh
 2. install ingress-nginx
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm install my-release ingress-nginx/ingress-nginx
+	helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+	helm repo update
+
+	helm install ingress-nginx ingress-nginx/ingress-nginx
 
 As of helm 3 seems that below steps ( 3 & 4 ) are not required so please ignore
 3. Create service account and assign role/permissions for server part of helm( aka tiller )
