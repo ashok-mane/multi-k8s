@@ -19,7 +19,7 @@ function App() {
           >
             Learn React
           </a>
-          <Link to="/">Home Version 6</Link>
+          <Link to="/">Home Version KUBERNETES!</Link>
           <Link to="/otherpage">Other Page</Link>
         </header>
         <div>
