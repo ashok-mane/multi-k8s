@@ -1,35 +1,24 @@
 sudo: required
 services:
-  - docker
-
+- docker
 env:
   global:
-    # get the current git commit id and store it in SHA variable
-    - SHA=$(git rev-parse HEAD)
-    # disable any prompts displyed by cloud sdk as we can not respond them
-    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+  - SHA=$(git rev-parse HEAD)
+  - CLOUDSDK_CORE_DISABLE_PROMPTS=1
 before_install:
-  # decrypt service-account.json.enc file which has gcp account credentials and make that file available as service-account.json which is be used below
-  - openssl aes-256-cbc -K $encrypted_9f3b5599b056_key -iv $encrypted_9f3b5599b056_iv -in service-account.json.enc -out service-account.json -d
-    
-  # install & configure google cloud sdk
-  - curl https://sdk.cloud.google.com | bash > /dev/null;
-  - source $HOME/google-cloud-sdk/path.bash.inc
-  - gcloud components update kubectl
-  - gcloud auth activate-service-account --key-file service-account.json
-  - gcloud config set project multi-k8s-317506
-  - gcloud config set compute/zone asia-south1-a
-  - gcloud container clusters get-credentials multi-cluster
-  
-  # login to docker hub
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  # build local image to run tests 
-  - docker build -t ashok/react-test -f ./client/Dockerfile.dev ./client
-  
-script:  
-  # run the tests
-  - docker run -e CI=true ashok/react-test npm test
-  
+- openssl aes-256-cbc -K $encrypted_9f3b5599b056_key -iv $encrypted_9f3b5599b056_iv
+  -in service-account.json.enc -out service-account.json -d
+- curl https://sdk.cloud.google.com | bash > /dev/null;
+- source $HOME/google-cloud-sdk/path.bash.inc
+- gcloud components update kubectl
+- gcloud auth activate-service-account --key-file service-account.json
+- gcloud config set project multi-k8s-317506
+- gcloud config set compute/zone asia-south1-a
+- gcloud container clusters get-credentials multi-cluster
+- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+- docker build -t ashok/react-test -f ./client/Dockerfile.dev ./client
+script:
+- docker run -e CI=true ashok/react-test npm test
 deploy:
   provider: script
   script: bash ./deploy.sh
